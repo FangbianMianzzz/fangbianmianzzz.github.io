@@ -12,7 +12,7 @@ description: This is just another page
 https://github.com/FangbianMianzzz/fangbianmianzzz.github.io/blob/master/img/%E6%AD%A4%E7%94%9F%E6%9C%AA%E5%AE%8C%E6%88%9001.jpg
 
 
-![Octocat]([https://github.githubassets.com/images/icons/emoji/octocat.png](https://github.com/FangbianMianzzz/fangbianmianzzz.github.io/blob/master/img/%E6%AD%A4%E7%94%9F%E6%9C%AA%E5%AE%8C%E6%88%9001.jpg))
+![Octocat]([https://github.githubassets.com/images/icons/emoji/octocat.png](https://github.com/FangbianMianzzz/fangbianmianzzz.github.io/blob/master/img/%E6%AD%A4%E7%94%9F%E6%9C%AA%E5%AE%8C%E6%88%9001.jpg)
 
 
 [back](./)
