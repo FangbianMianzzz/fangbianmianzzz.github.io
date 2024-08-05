@@ -4,84 +4,16 @@ layout: default
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
-[Link to another page](./another-page.html).
+[书籍收藏](./another-page.html).
 # Header 1
 
-> This is a blockquote following a header.
->
-> When something is important enough, you do it even if the odds are not in your favor.
-
-### Header 3
-
-```js
-// Javascript code with syntax highlighting.
-var fun = function lang(l) {
-  dateformat.i18n = require('./lang/' + l)
-  return true;
-}
-```
-
-```ruby
-# Ruby code with syntax highlighting
-GitHubPages::Dependencies.gems.each do |gem, version|
-  s.add_dependency(gem, "= #{version}")
-end
-```
-
-#### Header 4
-
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-*   This is an unordered list following a header.
-
-##### Header 5
-
-1.  This is an ordered list following a header.
-2.  This is an ordered list following a header.
-3.  This is an ordered list following a header.
-
-###### Header 6
-
-| head1        | head two          | three |
-|:-------------|:------------------|:------|
-| ok           | good swedish fish | nice  |
-| out of stock | good and plenty   | nice  |
-| ok           | good `oreos`      | hmm   |
-| ok           | good `zoute` drop | yumm  |
-
-### There's a horizontal rule below this.
-
-* * *
-
-### Here is an unordered list:
-
-*   Item foo
-*   Item bar
-*   Item baz
-*   Item zip
-
-### And an ordered list:
-
-1.  Item one
-1.  Item two
-1.  Item three
-1.  Item four
-
-### And a nested list:
-
-- level 1 item
-  - level 2 item
-  - level 2 item
-    - level 3 item
-    - level 3 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-  - level 2 item
-- level 1 item
-  - level 2 item
-  - level 2 item
-- level 1 item
+SAMATE自我介绍
+大家好，我叫Samate，身高175/体重120，目前在福建泉州从事面辅料业务。我一直对服装和面辅料有着浓厚的兴趣，这份工作让我能够接触到最新的面辅料趋势和技术，并与各类客户建立紧密的合作关系。我的工作不仅让我能够发挥自己的专业知识，还让我能不断学习和成长。
+在工作之余，我有许多爱好。其中，看电影是我的一大兴趣爱好，我喜欢各种类型的电影，比如《肖申克的救赎》、《拳击俱乐部》《盗梦空间》和《罗生门》。这些电影不仅让我享受视觉盛宴，还带给我许多深刻的思考。
+我也非常喜欢阅读，各类书籍都是我的挚爱。尤瓦尔赫拉利的《人类简史三部曲》、《被讨厌的勇气》和《我们误解了这个世界》，作家乙一的小说、《罗生门》、马伯庸的《长安的荔枝》和《食南之徒》、以及散文《撒哈拉的沙漠》都是我钟爱的作品。这些书籍让我在繁忙的工作之余能够静下心来，享受文字的魅力。是我最喜欢的几本书。这些书籍让我在繁忙的工作之余能够静下心来，享受文字的魅力。
+爬山和摄影是我的另两大爱好。我喜欢走进大自然，享受山间的宁静与美景，同时用相机记录下美好的瞬间。无论是壮丽的山川还是细腻的花草，都能通过我的镜头呈现出不一样的美感。
+此外，我还对植物充满兴趣。我喜欢研究和种植各种植物，无论是室内的绿植还是室外的花卉，都能给我带来无尽的乐趣和满足感。观察植物的生长过程，学习不同植物的养护方法，都是我生活中的一大乐趣。
+总之，我是一个对生活充满热情和好奇心的人，愿意不断尝试新事物，挑战自我。我相信，无论是工作还是生活，只要保持积极的态度和不断学习的精神，就一定能够取得满意的成果。
 
 ### Small image
 
@@ -96,11 +28,11 @@ end
 
 <dl>
 <dt>Name</dt>
-<dd>Godzilla</dd>
+<dd>SAMATE</dd>
 <dt>Born</dt>
-<dd>1952</dd>
-<dt>Birthplace</dt>
-<dd>Japan</dd>
+<dd>福建泉州</dd>
+<dt>手机/微信</dt>
+<dd>15396377670</dd>
 <dt>Color</dt>
 <dd>Green</dd>
 </dl>
