@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Another page
-description: 此生未完成摘要
+title: 此生未完成
+description: 摘要
 ---
 
 ## 摘要
