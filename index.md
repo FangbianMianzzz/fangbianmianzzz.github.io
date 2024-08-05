@@ -24,7 +24,7 @@ SAMATE自我介绍
 ![Branching](https://guides.github.com/activities/hello-world/branching.png)
 
 
-### Definition lists can be used with HTML syntax.
+### Contact me
 
 <dl>
 <dt>Name</dt>
@@ -33,14 +33,4 @@ SAMATE自我介绍
 <dd>福建泉州</dd>
 <dt>手机/微信</dt>
 <dd>15396377670</dd>
-<dt>Color</dt>
-<dd>Green</dd>
 </dl>
-
-```
-Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
-```
-
-```
-The final element.
-```
