@@ -18,15 +18,6 @@ layout: default
 此外，我还对植物充满兴趣。我喜欢研究和种植各种植物，无论是室内的绿植还是室外的花卉，都能给我带来无尽的乐趣和满足感。观察植物的生长过程，学习不同植物的养护方法，都是我生活中的一大乐趣。<br>
 总之，我是一个对生活充满热情和好奇心的人，愿意不断尝试新事物，挑战自我。我相信，无论是工作还是生活，只要保持积极的态度和不断学习的精神，就一定能够取得满意的成果。<br>
 
-### Small image
-
-![Octocat](https://github.githubassets.com/images/icons/emoji/octocat.png)
-
-### Large image
-
-![Branching](https://guides.github.com/activities/hello-world/branching.png)
-
-
 ### Contact me
 
 <dl>
