@@ -30,7 +30,7 @@ SAMATE自我介绍
 <dt>Name</dt>
 <dd>SAMATE</dd>
 <dt>Born</dt>
-<dd>福建泉州</dd>
-<dt>手机/微信</dt>
+<dd>QUANZHOU</dd>
+<dt>wechat</dt>
 <dd>15396377670</dd>
 </dl>
