@@ -185,9 +185,8 @@
             { id: 22, code: "FB25010006", name: "N7#AA背拉闭口U型上止无下止", pullTab: "Shapellx拉片", price: 1.71, cmPrice: 0.01 },
             { id: 23, code: "FB25010007", name: "N7#AA注塑背拉开口", pullTab: "Shapellx拉片", price: 2, cmPrice: 0.01 },
             { id: 24, code: "FB25020001", name: "N4#IKA闭口U型上止", pullTab: "和新无logo新拉片", price: 1.27, cmPrice: 0.0064 },
-            { id: 25, code: "FB25020002", name: "M3.5#闭口方牙（亮银）", pullTab: "和新无logo新拉片", price: 2.6, cmPrice: 0.0064 },
-             { id: 26, code: "FB25020002", name: "M3.5#闭口方牙（浅金）", pullTab: "和新无logo新拉片", price: 2.9, cmPrice: 0.0064 },
-            { id: 27, code: "FB25020003", name: "M3.5#闭口方牙白枪", pullTab: "裤拉拉片", price: 1.396, cmPrice: 0.039 }
+            { id: 25, code: "FB25020002", name: "M3.5#闭口方牙白金", pullTab: "和新无logo新拉片", price: 2.6, cmPrice: 0.0064 },
+            { id: 26, code: "FB25020003", name: "M3.5#闭口方牙白枪", pullTab: "裤拉拉片", price: 1.396, cmPrice: 0.039 }
         ];
 
         // 当前选中的产品
@@ -207,7 +206,7 @@
                     <td>${product.name}</td>
                     <td>${product.pullTab}</td>
                     <td class="price">¥${product.price.toFixed(2)}</td>
-                    <td>¥${product.cmPrice.toFixed(3)}</td>
+                    <td>¥${product.cmPrice.toFixed(4)}</td>
                 `;
 
                 // 点击行选择产品
@@ -244,7 +243,7 @@
             if (selectedProduct) {
                 document.getElementById('currentProduct').textContent = selectedProduct.name;
                 document.getElementById('basePrice').textContent = `¥${selectedProduct.price.toFixed(2)}`;
-                document.getElementById('cmPrice').textContent = `¥${selectedProduct.cmPrice.toFixed(3)}/cm`;
+                document.getElementById('cmPrice').textContent = `¥${selectedProduct.cmPrice.toFixed(4)}/cm`;
             }
         }
 
@@ -271,12 +270,14 @@
             }
 
             const diff = length - 30;
-            const totalPrice = selectedProduct.price + (diff * selectedProduct.cmPrice);
+            // 将加减价精确到 0.0064
+            const adjustedDiff = Math.round(diff / 0.0064) * 0.0064;
+            const totalPrice = selectedProduct.price + (adjustedDiff * selectedProduct.cmPrice);
 
-            document.getElementById('totalPrice').textContent = `¥${totalPrice.toFixed(2)}`;
+            document.getElementById('totalPrice').textContent = `¥${totalPrice.toFixed(4)}`;
             document.getElementById('calculationDetail').innerHTML = `
                 计算公式: ¥${selectedProduct.price.toFixed(2)} (基准价) 
-                ${diff >= 0 ? '+' : '-'} ${Math.abs(diff)}cm × ¥${selectedProduct.cmPrice.toFixed(3)}/cm
+                ${adjustedDiff >= 0 ? '+' : '-'} ${Math.abs(adjustedDiff)}cm × ¥${selectedProduct.cmPrice.toFixed(4)}/cm
             `;
             document.getElementById('result').style.display = 'block';
         }
