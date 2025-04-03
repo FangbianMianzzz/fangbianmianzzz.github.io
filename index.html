@@ -3,104 +3,191 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>厦门和新拉链产品数据中心</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
+        :root {
+            --primary: #2c7be5;
+            --secondary: #6e84a3;
+            --success: #00ac69;
+            --warning: #f6c343;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
-
-       .container {
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background: #f5f5f7;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+        
+        .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
         }
-
+        
         h1 {
-            color: #2c7be5;
+            color: var(--primary);
             margin-top: 0;
+            font-size: 1.5rem;
         }
-
+        
+        /* 响应式表格 */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            min-width: 600px;
         }
-
-        th,
-        td {
-            padding: 12px 15px;
+        
+        th, td {
+            padding: 12px 10px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e0e0e0;
         }
-
+        
         th {
-            background-color: #2c7be5;
+            background-color: var(--primary);
             color: white;
+            position: sticky;
+            top: 0;
         }
-
+        
         tr:hover {
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
         }
-
+        
         tr.selected {
             background-color: #e6f0ff;
         }
-
-       .price {
-            color: #10b981;
+        
+        .price {
+            color: var(--success);
             font-weight: bold;
         }
-
-       .calculator {
+        
+        /* 计算器样式 */
+        .calculator {
             background: #f8f9fa;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
             margin-top: 20px;
         }
-
-       .input-group {
+        
+        .calculator h2 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+        
+        .input-group {
             margin-bottom: 15px;
         }
-
+        
         label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 500;
+            color: #555;
         }
-
+        
         input {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            box-sizing: border-box;
+            font-size: 1rem;
         }
-
+        
         button {
-            background: #2c7be5;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 12px;
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s;
         }
-
+        
         button:hover {
-            background: #1a5bb6;
+            background: #1a68d4;
         }
-
-       .result {
+        
+        .result {
             margin-top: 20px;
-            padding-top: 20px;
+            padding-top: 15px;
             border-top: 1px solid #eee;
+        }
+        
+        #totalPrice {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+        
+        #calculationDetail {
+            color: var(--secondary);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+                font-size: 0.9rem;
+            }
+            
+            .calculator {
+                padding: 15px;
+            }
+            
+            input, button {
+                padding: 12px;
+            }
+        }
+        
+        /* 桌面端优化 */
+        @media (min-width: 992px) {
+            body {
+                padding: 20px;
+            }
+            
+            table {
+                min-width: 100%;
+            }
+            
+            th, td {
+                padding: 12px 15px;
+            }
         }
     </style>
 </head>
@@ -110,21 +197,23 @@
         <h1>厦门和新拉链产品数据中心</h1>
         <p>共26款拉链产品</p>
 
-        <table id="productTable">
-            <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>编号</th>
-                    <th>品名</th>
-                    <th>拉片</th>
-                    <th>基准价格</th>
-                    <th>±1cm价格</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- 产品数据将在这里动态生成 -->
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="productTable">
+                <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>编号</th>
+                        <th>品名</th>
+                        <th>拉片</th>
+                        <th>基准价格</th>
+                        <th>±1cm价格</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- 产品数据将在这里动态生成 -->
+                </tbody>
+            </table>
+        </div>
 
         <div class="calculator">
             <h2>价格计算器</h2>
@@ -141,7 +230,7 @@
 
             <div class="input-group">
                 <label>每厘米价格</label>
-                <div id="cmPrice">¥0.00/cm</div>
+                <div id="cmPrice">¥0.0000/cm</div>
             </div>
 
             <div class="input-group">
@@ -152,7 +241,7 @@
             <button id="calculateBtn">计算总价</button>
 
             <div class="result" id="result" style="display: none;">
-                <div>总价: <span id="totalPrice" class="price">¥0.00</span></div>
+                <div>总价: <span id="totalPrice" class="price">¥0.0000</span></div>
                 <div id="calculationDetail" style="margin-top: 10px; color: #666;"></div>
             </div>
         </div>
@@ -236,6 +325,12 @@
 
             selectedProduct = product;
             updateCalculatorDisplay();
+            
+            // 自动滚动到计算器
+            document.querySelector('.calculator').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'nearest' 
+            });
         }
 
         // 更新计算器显示
@@ -280,6 +375,12 @@
                 ${adjustedDiff >= 0 ? '+' : '-'} ${Math.abs(adjustedDiff)}cm × ¥${selectedProduct.cmPrice.toFixed(4)}/cm
             `;
             document.getElementById('result').style.display = 'block';
+            
+            // 平滑滚动到结果
+            document.getElementById('result').scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'nearest' 
+            });
         }
 
         // 页面加载时初始化
@@ -300,5 +401,4 @@
         });
     </script>
 </body>
-
-</html>    
+</html>
