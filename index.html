@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,56 +12,80 @@
             padding: 20px;
             background: #f5f5f5;
         }
+
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             color: #2c7be5;
             margin-top: 0;
+            text-align: center;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
         }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            cursor: pointer;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: calc(25% - 10px);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        th {
-            background-color: #2c7be5;
-            color: white;
+
+        .product-card:hover {
+            background-color: #f9f9f9;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        tr.selected {
+
+        .product-card.selected {
             background-color: #e6f0ff;
+            border-color: #2c7be5;
         }
-        .price {
+
+        .product-code, .product-name, .product-pulltab, .product-price, .product-cmprice {
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .product-price {
             color: #10b981;
             font-weight: bold;
         }
+
         .calculator {
             background: #f8f9fa;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 8px;
             margin-top: 20px;
+            text-align: center;
         }
+
         .input-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
+
         input {
             width: 100%;
             padding: 8px;
@@ -68,6 +93,7 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         button {
             background: #2c7be5;
             color: white;
@@ -76,10 +102,14 @@
             border-radius: 4px;
             cursor: pointer;
             width: 100%;
+            font-size: 16px;
+            transition: background 0.2s;
         }
+
         button:hover {
             background: #1a5bb6;
         }
+
         .result {
             margin-top: 20px;
             padding-top: 20px;
@@ -87,52 +117,38 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>厦门和新拉链产品数据中心</h1>
-        <p>共22款拉链产品</p>
-        
-        <table id="productTable">
-            <thead>
-                <tr>
-                    <th>序号</th>
-                    <th>编号</th>
-                    <th>品名</th>
-                    <th>拉片</th>
-                    <th>基准价格</th>
-                    <th>±1cm价格</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- 产品数据将在这里动态生成 -->
-            </tbody>
-        </table>
-        
+        <p style="text-align:center;">共22款拉链产品</p>
+
+        <div class="product-list" id="productList"></div>
+
         <div class="calculator">
             <h2>价格计算器</h2>
-            
             <div class="input-group">
                 <label>当前产品</label>
                 <div id="currentProduct">未选择产品</div>
             </div>
-            
+
             <div class="input-group">
                 <label>基准价格 (30cm)</label>
                 <div id="basePrice" class="price">¥0.00</div>
             </div>
-            
+
             <div class="input-group">
                 <label>每厘米价格</label>
                 <div id="cmPrice">¥0.00/cm</div>
             </div>
-            
+
             <div class="input-group">
                 <label>定制长度 (cm)</label>
                 <input type="number" id="customLength" min="5" max="300" placeholder="输入5-300之间的数字">
             </div>
-            
+
             <button id="calculateBtn">计算总价</button>
-            
+
             <div class="result" id="result" style="display:none;">
                 <div>总价: <span id="totalPrice" class="price">¥0.00</span></div>
                 <div id="calculationDetail" style="margin-top:10px; color:#666;"></div>
@@ -141,139 +157,62 @@
     </div>
 
     <script>
-        // 完整产品数据
         const products = [
-            {id: 1, code: "FB23020002", name: "5#隐形拉链，水滴拉片", pullTab: "水滴拉片", price: 1.93, cmPrice: 0.02},
-            {id: 2, code: "FB23020003", name: "5#金属闭口白金", pullTab: "与狼共舞圆环(0.5)0.8", price: 3.60, cmPrice: 0.06},
-            {id: 3, code: "FB23020004", name: "4#尼龙背拉闭口", pullTab: "葫芦片（免费）", price: 1.00, cmPrice: 0.01},
-            {id: 4, code: "FB23020005", name: "5#尼龙防水闭口", pullTab: "YG拉头（0.6）", price: 2.99, cmPrice: 0.07},
-            {id: 5, code: "FB23020006", name: "5#尼龙反装闭口", pullTab: "葫芦片（免费）", price: 1.21, cmPrice: 0.01},
-            {id: 6, code: "FB23020007", name: "5#青古铜闭口", pullTab: "四方片（免费）", price: 2.44, cmPrice: 0.06},
-            {id: 7, code: "FB23020008", name: "5#尼龙正装闭口", pullTab: "葫芦片（免费）", price: 1.13, cmPrice: 0.01},
-            {id: 8, code: "FB23020009", name: "3#隐形闭口", pullTab: "水滴头（免费）", price: 0.78, cmPrice: 0.01},
-            {id: 9, code: "FB23020010", name: "4#尼龙正装闭口", pullTab: "剑尾片（免费）", price: 0.95, cmPrice: 0.01},
-            {id: 10, code: "FB23020011", name: "5#反装尼龙闭口", pullTab: "双喜5#剑尾YG（0.55）", price: 1.76, cmPrice: 0.01},
-            {id: 11, code: "FB23020012", name: "5#尼龙反装双开", pullTab: "双喜5#剑尾YG（0.55）", price: 2.57, cmPrice: 0.01},
-            {id: 12, code: "FB23020013", name: "4#尼龙反装闭口（YG头）", pullTab: "YG头（0.55）", price: 1.55, cmPrice: 0.01},
-            {id: 13, code: "FB23020014", name: "3#尼龙正装闭口", pullTab: "剑尾片（免费）", price: 0.56, cmPrice: 0.006},
-            {id: 14, code: "FB24010001", name: "5#注塑尼龙背拉开口", pullTab: "5#葫芦片", price: 1.50, cmPrice: 0.01},
-            {id: 15, code: "FB24010002", name: "4#尼龙正装闭口（YG头）", pullTab: "YG头（0.55）", price: 1.50, cmPrice: 0.01},
-            {id: 16, code: "FB24010003", name: "4#尼龙正拉开口", pullTab: "YG头（0.55）", price: 1.78, cmPrice: 0.01},
-            {id: 17, code: "FB24010005", name: "3#尼龙闭口窄边2cm无上下止", pullTab: "3#剑尾拉片（免费）", price: 0.75, cmPrice: 0.01},
-            {id: 18, code: "FB25010001", name: "3#尼龙正装闭口（两端闭合）", pullTab: "3#立天剑尾弹簧", price: 0.95, cmPrice: 0.006},
-            {id: 19, code: "FB25010002", name: "5#尼龙正装闭口", pullTab: "5#双喜剑尾塑料片", price: 1.68, cmPrice: 0.01},
-            {id: 20, code: "FB25010004", name: "5#尼龙注塑开口", pullTab: "5#卡门圆环", price: 1.78, cmPrice: 0.01},
-            {id: 21, code: "FB25010005", name: "N4.5#K背拉闭口U型上止无下止", pullTab: "Shapellx拉片", price: 1.45, cmPrice: 0.01},
-            {id: 22, code: "FB25010006", name: "N7#AA背拉闭口U型上止无下止", pullTab: "Shapellx拉片", price: 1.71, cmPrice: 0.01}
+          { id: 1, code: "FB23020002", name: "5#隐形拉链，水滴拉片", pullTab: "水滴拉片", price: 1.93, cmPrice: 0.02 },
+            { id: 2, code: "FB23020003", name: "5#金属闭口白金", pullTab: "与狼共舞圆环(0.5)0.8", price: 3.60, cmPrice: 0.06 },
+            { id: 3, code: "FB23020004", name: "4#尼龙背拉闭口", pullTab: "葫芦片（免费）", price: 1.00, cmPrice: 0.01 },
+            { id: 4, code: "FB23020005", name: "5#尼龙防水闭口", pullTab: "YG拉头（0.6）", price: 2.99, cmPrice: 0.07 },
+            { id: 5, code: "FB23020006", name: "5#尼龙反装闭口", pullTab: "葫芦片（免费）", price: 1.21, cmPrice: 0.01 },
+            { id: 6, code: "FB23020007", name: "5#青古铜闭口", pullTab: "四方片（免费）", price: 2.44, cmPrice: 0.06 },
+            { id: 7, code: "FB23020008", name: "5#尼龙正装闭口", pullTab: "葫芦片（免费）", price: 1.13, cmPrice: 0.01 },
+            { id: 8, code: "FB23020009", name: "3#隐形闭口", pullTab: "水滴头（免费）", price: 0.78, cmPrice: 0.01 },
+            { id: 9, code: "FB23020010", name: "4#尼龙正装闭口", pullTab: "剑尾片（免费）", price: 0.95, cmPrice: 0.01 },
+            { id: 10, code: "FB23020011", name: "5#反装尼龙闭口", pullTab: "双喜5#剑尾YG（0.55）", price: 1.76, cmPrice: 0.01 },
+            { id: 11, code: "FB23020012", name: "5#尼龙反装双开", pullTab: "双喜5#剑尾YG（0.55）", price: 2.57, cmPrice: 0.01 },
+            { id: 12, code: "FB23020013", name: "4#尼龙反装闭口（YG头）", pullTab: "YG头（0.55）", price: 1.55, cmPrice: 0.01 },
+            { id: 13, code: "FB23020014", name: "3#尼龙正装闭口", pullTab: "剑尾片（免费）", price: 0.56, cmPrice: 0.006 },
+            { id: 14, code: "FB24010001", name: "5#注塑尼龙背拉开口", pullTab: "5#葫芦片", price: 1.50, cmPrice: 0.01 },
+            { id: 15, code: "FB24010002", name: "4#尼龙正装闭口（YG头）", pullTab: "YG头（0.55）", price: 1.50, cmPrice: 0.01 },
+            { id: 16, code: "FB24010003", name: "4#尼龙正拉开口", pullTab: "YG头（0.55）", price: 1.78, cmPrice: 0.01 },
+            { id: 17, code: "FB24010005", name: "3#尼龙闭口窄边2cm无上下止", pullTab: "3#剑尾拉片（免费）", price: 0.75, cmPrice: 0.01 },
+            { id: 18, code: "FB25010001", name: "3#尼龙正装闭口（两端闭合）", pullTab: "3#立天剑尾弹簧", price: 0.95, cmPrice: 0.006 },
+            { id: 19, code: "FB25010002", name: "5#尼龙正装闭口", pullTab: "5#双喜剑尾塑料片", price: 1.68, cmPrice: 0.01 },
+            { id: 20, code: "FB25010004", name: "5#尼龙注塑开口", pullTab: "5#卡门圆环", price: 1.78, cmPrice: 0.01 },
+            { id: 21, code: "FB25010005", name: "N4.5#K背拉闭口U型上止无下止", pullTab: "Shapellx拉片", price: 1.45, cmPrice: 0.01 },
+            { id: 22, code: "FB25010006", name: "N7#AA背拉闭口U型上止无下止", pullTab: "Shapellx拉片", price: 1.71, cmPrice: 0.01 }
         ];
 
-        // 当前选中的产品
         let selectedProduct = null;
 
-        // 初始化表格
-        function initTable() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = ''; // 清空现有内容
-            
+        function initProductList() {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
             products.forEach(product => {
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${product.id}</td>
-                    <td>${product.code}</td>
-                    <td>${product.name}</td>
-                    <td>${product.pullTab}</td>
-                    <td class="price">¥${product.price.toFixed(2)}</td>
-                    <td>¥${product.cmPrice.toFixed(3)}</td>
+                const card = document.createElement('div');
+                card.classList.add('product-card');
+                card.innerHTML = `
+                    <div class="product-code">编号: ${product.code}</div>
+                    <div class="product-name">品名: ${product.name}</div>
+                    <div class="product-pulltab">拉片: ${product.pullTab}</div>
+                    <div class="product-price">基准价格: ¥${product.price.toFixed(2)}</div>
+                    <div class="product-cmprice">±1cm价格: ¥${product.cmPrice.toFixed(3)}</div>
                 `;
-                
-                // 点击行选择产品
-                row.addEventListener('click', () => {
-                    selectProduct(product);
-                });
-                
-                tbody.appendChild(row);
+                card.addEventListener('click', () => selectProduct(product, card));
+                productList.appendChild(card);
             });
-            
-            // 默认选择第一个产品
-            if (products.length > 0) {
-                selectProduct(products[0]);
-            }
         }
 
-        // 选择产品
-        function selectProduct(product) {
-            // 移除之前的选择状态
-            document.querySelectorAll('#tableBody tr').forEach(row => {
-                row.classList.remove('selected');
-            });
-            
-            // 添加新的选择状态
-            const rows = document.querySelectorAll('#tableBody tr');
-            rows[product.id - 1].classList.add('selected');
-            
+        function selectProduct(product, card) {
+            document.querySelectorAll('.product-card').forEach(card => card.classList.remove('selected'));
+            card.classList.add('selected');
             selectedProduct = product;
-            updateCalculatorDisplay();
+            document.getElementById('currentProduct').textContent = product.name;
+            document.getElementById('basePrice').textContent = `¥${product.price.toFixed(2)}`;
+            document.getElementById('cmPrice').textContent = `¥${product.cmPrice.toFixed(3)}/cm`;
         }
 
-        // 更新计算器显示
-        function updateCalculatorDisplay() {
-            if (selectedProduct) {
-                document.getElementById('currentProduct').textContent = selectedProduct.name;
-                document.getElementById('basePrice').textContent = `¥${selectedProduct.price.toFixed(2)}`;
-                document.getElementById('cmPrice').textContent = `¥${selectedProduct.cmPrice.toFixed(3)}/cm`;
-            }
-        }
-
-        // 计算价格
-        function calculatePrice() {
-            if (!selectedProduct) {
-                alert('请先在表格中选择产品');
-                return;
-            }
-            
-            const lengthInput = document.getElementById('customLength');
-            const length = parseFloat(lengthInput.value);
-            
-            if (isNaN(length)) {
-                alert('请输入有效长度');
-                lengthInput.focus();
-                return;
-            }
-            
-            if (length < 5 || length > 300) {
-                alert('长度必须在5-300cm之间');
-                lengthInput.focus();
-                return;
-            }
-            
-            const diff = length - 30;
-            const totalPrice = selectedProduct.price + (diff * selectedProduct.cmPrice);
-            
-            document.getElementById('totalPrice').textContent = `¥${totalPrice.toFixed(2)}`;
-            document.getElementById('calculationDetail').innerHTML = `
-                计算公式: ¥${selectedProduct.price.toFixed(2)} (基准价) 
-                ${diff >= 0 ? '+' : '-'} ${Math.abs(diff)}cm × ¥${selectedProduct.cmPrice.toFixed(3)}/cm
-            `;
-            document.getElementById('result').style.display = 'block';
-        }
-
-        // 页面加载时初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            initTable();
-            
-            // 绑定计算按钮事件
-            document.getElementById('calculateBtn').addEventListener('click', calculatePrice);
-            
-            // 输入长度时自动计算
-            document.getElementById('customLength').addEventListener('input', function() {
-                if (this.value && selectedProduct) {
-                    calculatePrice();
-                } else {
-                    document.getElementById('result').style.display = 'none';
-                }
-            });
-        });
+        document.addEventListener('DOMContentLoaded', initProductList);
     </script>
 </body>
+
 </html>
