@@ -72,9 +72,33 @@
 
 <script>
   const products = [
-    { id: 1, code: "FB23020002", name: "5#隐形拉链，水滴拉片", pullTab: "水滴拉片", price: 1.93, cmPrice: 0.02 },
-    { id: 2, code: "FB23020003", name: "5#金属闭口白金", pullTab: "与狼共舞圆环(0.5)0.8", price: 3.60, cmPrice: 0.06 },
-    { id: 27, code: "FB25020003", name: "M3.5#闭口方牙白枪", pullTab: "裤拉拉片", price: 1.396, cmPrice: 0.039 }
+{ id: 1, code: "FB23020002", name: "5#隐形拉链，水滴拉片", pullTab: "水滴拉片", price: 1.93, cmPrice: 0.02 },
+      { id: 2, code: "FB23020003", name: "5#金属闭口白金", pullTab: "与狼共舞圆环(0.5)0.8", price: 3.60, cmPrice: 0.06 },
+      { id: 3, code: "FB23020004", name: "4#尼龙背拉闭口", pullTab: "葫芦片（免费）", price: 1.00, cmPrice: 0.01 },
+      { id: 4, code: "FB23020005", name: "5#尼龙防水闭口", pullTab: "YG拉头（0.6）", price: 2.99, cmPrice: 0.07 },
+      { id: 5, code: "FB23020006", name: "5#尼龙反装闭口", pullTab: "葫芦片（免费）", price: 1.21, cmPrice: 0.01 },
+      { id: 6, code: "FB23020007", name: "5#青古铜闭口", pullTab: "四方片（免费）", price: 2.44, cmPrice: 0.06 },
+      { id: 7, code: "FB23020008", name: "5#尼龙正装闭口", pullTab: "葫芦片（免费）", price: 1.13, cmPrice: 0.01 },
+      { id: 8, code: "FB23020009", name: "3#隐形闭口", pullTab: "水滴头（免费）", price: 0.78, cmPrice: 0.01 },
+      { id: 9, code: "FB23020010", name: "4#尼龙正装闭口", pullTab: "剑尾片（免费）", price: 0.95, cmPrice: 0.01 },
+      { id: 10, code: "FB23020011", name: "5#反装尼龙闭口", pullTab: "双喜5#剑尾YG（0.55）", price: 1.76, cmPrice: 0.01 },
+      { id: 11, code: "FB23020012", name: "5#尼龙反装双开", pullTab: "双喜5#剑尾YG（0.55）", price: 2.57, cmPrice: 0.01 },
+      { id: 12, code: "FB23020013", name: "4#尼龙反装闭口（YG头）", pullTab: "YG头（0.55）", price: 1.55, cmPrice: 0.01 },
+      { id: 13, code: "FB23020014", name: "3#尼龙正装闭口", pullTab: "剑尾片（免费）", price: 0.56, cmPrice: 0.006 },
+      { id: 14, code: "FB24010001", name: "5#注塑尼龙背拉开口", pullTab: "5#葫芦片", price: 1.50, cmPrice: 0.01 },
+      { id: 15, code: "FB24010002", name: "4#尼龙正装闭口（YG头）", pullTab: "YG头（0.55）", price: 1.50, cmPrice: 0.01 },
+      { id: 16, code: "FB24010003", name: "4#尼龙正拉开口", pullTab: "YG头（0.55）", price: 1.78, cmPrice: 0.01 },
+      { id: 17, code: "FB24010005", name: "3#尼龙闭口窄边2cm无上下止", pullTab: "3#剑尾拉片（免费）", price: 0.75, cmPrice: 0.01 },
+      { id: 18, code: "FB25010001", name: "3#尼龙正装闭口（两端闭合）", pullTab: "3#立天剑尾弹簧", price: 0.95, cmPrice: 0.006 },
+      { id: 19, code: "FB25010002", name: "5#尼龙正装闭口", pullTab: "5#双喜剑尾塑料片", price: 1.68, cmPrice: 0.01 },
+      { id: 20, code: "FB25010004", name: "5#尼龙注塑开口", pullTab: "5#卡门圆环", price: 1.78, cmPrice: 0.01 },
+      { id: 21, code: "FB25010005", name: "N4.5#K背拉闭口U型上止无下止", pullTab: "Shapellx拉片", price: 1.45, cmPrice: 0.01 },
+      { id: 22, code: "FB25010006", name: "N7#AA背拉闭口U型上止无下止", pullTab: "Shapellx拉片", price: 1.71, cmPrice: 0.01 },
+      { id: 23, code: "FB25010007", name: "N7#AA注塑背拉开口", pullTab: "Shapellx拉片", price: 2, cmPrice: 0.01 },
+      { id: 24, code: "FB25020001", name: "N4#IKA闭口U型上止", pullTab: "和新无logo新拉片", price: 1.27, cmPrice: 0.0064 },
+      { id: 25, code: "FB25020002", name: "M3.5#闭口方牙白金", pullTab: "和新无logo新拉片", price: 2.6, cmPrice: 0.045 },
+       { id: 26, code: "FB25020002", name: "M3.5#闭口方牙浅金", pullTab: "和新无logo新拉片", price: 2.6, cmPrice: 0.045 },
+      { id: 27, code: "FB25020003", name: "M3.5#闭口方牙白枪", pullTab: "裤拉拉片", price: 1.396, cmPrice: 0.039 }
   ];
 
   let selectedProduct = null;
