@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球新闻聚合</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f6fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        select, button {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        button {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .category-tab {
+            padding: 12px 25px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .category-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .news-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .article-content {
+            padding: 15px;
+        }
+
+        .article-title {
+            font-size: 1.1em;
+            margin: 0 0 10px;
+            color: var(--primary-color);
+        }
+
+        .article-meta {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .similar-articles {
+            border-top: 1px solid #eee;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="filters">
+            <select id="locale">
+                <option value="us">美国</option>
+                <option value="cn">中国</option>
+                <option value="jp">日本</option>
+                <option value="fr">法国</option>
+            </select>
+
+            <select id="language">
+                <option value="en">英语</option>
+                <option value="zh">中文</option>
+                <option value="ja">日语</option>
+            </select>
+
+            <button onclick="loadNews()">加载新闻</button>
+        </div>
+
+        <div class="category-tabs" id="categoryTabs"></div>
+        
+        <div id="loading" class="loading" style="display: none;">加载中...</div>
+        <div class="news-grid" id="newsContainer"></div>
+    </div>
+
+    <script>
+        const API_TOKEN = 'alOW9iD4Q2b4a2YPTz7jAV5CDwoQytFMAGu18IAd';
+        const API_ENDPOINT = 'https://api.thenewsapi.com/v1/news/headlines';
+
+        let currentCategory = 'general';
+        let currentData = null;
+
+        async function loadNews() {
+            const locale = document.getElementById('locale').value;
+            const language = document.getElementById('language').value;
+            
+            showLoading(true);
+            
+            try {
+                const url = new URL(API_ENDPOINT);
+                url.searchParams.set('api_token', API_TOKEN);
+                url.searchParams.set('locale', locale);
+                url.searchParams.set('language', language);
+                url.searchParams.set('headlines_per_category', 6);
+
+                const response = await fetch(url);
+                
+                if (!response.ok) throw new Error(`HTTP错误: ${response.status}`);
+                
+                const data = await response.json();
+                currentData = data.data;
+                
+                renderCategoryTabs(Object.keys(data.data));
+                renderNews(currentCategory);
+            } catch (error) {
+                alert(`请求失败: ${error.message}`);
+                console.error(error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderCategoryTabs(categories) {
+            const container = document.getElementById('categoryTabs');
+            container.innerHTML = categories.map(cat => `
+                <div class="category-tab ${cat === currentCategory ? 'active' : ''}" 
+                     onclick="switchCategory('${cat}')">
+                    ${getCategoryName(cat)}
+                </div>
+            `).join('');
+        }
+
+        function switchCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-tab').forEach(tab => 
+                tab.classList.remove('active'));
+            document.querySelector(`[onclick="switchCategory('${category}')"]`)
+                .classList.add('active');
+            renderNews(category);
+        }
+
+        function renderNews(category) {
+            const container = document.getElementById('newsContainer');
+            const articles = currentData[category] || [];
+            
+            container.innerHTML = articles.map(article => `
+                <div class="article-card">
+                    ${article.image_url ? `
+                        <img src="${article.image_url}" 
+                             class="article-image"
+                             alt="${article.title}">` : ''}
+                    <div class="article-content">
+                        <h3 class="article-title">${article.title}</h3>
+                        <div class="article-meta">
+                            <span>${article.source}</span> • 
+                            <span>${new Date(article.published_at).toLocaleDateString()}</span>
+                        </div>
+                        <p>${article.description || article.snippet}</p>
+                    </div>
+                    ${article.similar?.length > 0 ? `
+                    <div class="similar-articles">
+                        <strong>相关报道:</strong>
+                        <ul>
+                            ${article.similar.slice(0, 2).map(sim => `
+                                <li><a href="${sim.url}" target="_blank">${sim.title}</a></li>
+                            `).join('')}
+                        </ul>
+                    </div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function getCategoryName(cat) {
+            const names = {
+                general: '综合',
+                business: '商业',
+                tech: '科技',
+                sports: '体育',
+                science: '科学',
+                health: '健康'
+            };
+            return names[cat] || cat;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // 初始加载
+        loadNews();
+    </script>
+</body>
+</html>
