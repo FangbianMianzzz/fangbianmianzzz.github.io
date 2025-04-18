@@ -80,7 +80,29 @@
             "糖醋里脊", "糖醋排骨", "甜辣烤全翅", "糖拌西红柿", "拔丝土豆"
         ];
 
-        document.getElementById('calculateBtn').addEventListener('click', function () {
+        // 生成指定数量的不重复随机菜品
+        function getRandomDishes(dishList, count) {
+            const selectedDishes = [];
+            const availableDishes = [...dishList];
+
+            while (selectedDishes.length < count && availableDishes.length > 0) {
+                const randomIndex = Math.floor(Math.random() * availableDishes.length);
+                const dish = availableDishes[randomIndex];
+                selectedDishes.push(dish);
+                availableDishes.splice(randomIndex, 1);
+            }
+
+            return selectedDishes;
+        }
+
+        // 生成菜谱链接
+        function getDishLink(dish, isVegetable) {
+            let category = isVegetable ? "vegetable_dish" : "meat_dish";
+            return `dishes/${category}/${dish}/${dish}.md`;
+        }
+
+        // 计算并显示结果
+        function calculateAndShowResult() {
             const numPeople = parseInt(document.getElementById('numPeople').value);
             const hasKids = document.getElementById('hasKids').value === 'yes';
 
@@ -106,36 +128,27 @@
             document.getElementById('specialNotes').textContent = `特别提示: ${specialNotes}`;
 
             // 随机选择素菜
-            const selectedVegetableDishes = [];
-            while (selectedVegetableDishes.length < vegetableCount) {
-                const randomIndex = Math.floor(Math.random() * vegetableDishes.length);
-                const dish = vegetableDishes[randomIndex];
-                if (!selectedVegetableDishes.includes(dish)) {
-                    selectedVegetableDishes.push(dish);
-                }
-            }
+            const selectedVegetableDishes = getRandomDishes(vegetableDishes, vegetableCount);
 
             // 随机选择荤菜
-            const selectedMeatDishes = [];
+            let selectedMeatDishes = [];
             if (hasKids) {
                 // 如果有小孩，先选一个有甜味的菜
-                const randomSweetIndex = Math.floor(Math.random() * sweetDishes.length);
-                selectedMeatDishes.push(sweetDishes[randomSweetIndex]);
+                const sweetDish = getRandomDishes(sweetDishes, 1)[0];
+                selectedMeatDishes.push(sweetDish);
             }
-            while (selectedMeatDishes.length < meatCount) {
-                const randomIndex = Math.floor(Math.random() * meatDishes.length);
-                const dish = meatDishes[randomIndex];
-                if (!selectedMeatDishes.includes(dish)) {
-                    selectedMeatDishes.push(dish);
-                }
-            }
+            const remainingMeatCount = meatCount - selectedMeatDishes.length;
+            selectedMeatDishes = selectedMeatDishes.concat(getRandomDishes(meatDishes, remainingMeatCount));
 
             // 显示素菜菜谱
             const vegetableDishesList = document.getElementById('vegetableDishes');
             vegetableDishesList.innerHTML = '';
             selectedVegetableDishes.forEach(dish => {
                 const listItem = document.createElement('li');
-                listItem.textContent = dish;
+                const link = document.createElement('a');
+                link.href = getDishLink(dish, true);
+                link.textContent = dish;
+                listItem.appendChild(link);
                 vegetableDishesList.appendChild(listItem);
             });
 
@@ -144,12 +157,18 @@
             meatDishesList.innerHTML = '';
             selectedMeatDishes.forEach(dish => {
                 const listItem = document.createElement('li');
-                listItem.textContent = dish;
+                const link = document.createElement('a');
+                link.href = getDishLink(dish, false);
+                link.textContent = dish;
+                listItem.appendChild(link);
                 meatDishesList.appendChild(listItem);
             });
 
             document.getElementById('result').classList.remove('hidden');
-        });
+        }
+
+        // 添加事件监听器
+        document.getElementById('calculateBtn').addEventListener('click', calculateAndShowResult);
     </script>
 </body>
 
