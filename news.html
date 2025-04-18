@@ -1,121 +1,117 @@
+<!--
+Project: JIEJOE Clone Personal Portfolio
+Structure:
+  /index.html
+  /css/style.css
+  /js/script.js
+  /assets/
+-->
+
+<!-- index.html -->
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全球新闻聚合</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Name – Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- GSAP CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <script src="js/script.js" defer></script>
 </head>
-<body class="bg-gray-100 font-sans p-4">
-    <div class="container mx-auto">
-        <div class="bg-white p-4 rounded-lg shadow-md mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <select id="locale" class="border border-gray-300 p-2 rounded-md">
-                <option value="us">美国</option>
-                <option value="cn">中国</option>
-                <option value="jp">日本</option>
-                <option value="fr">法国</option>
-            </select>
-            <select id="language" class="border border-gray-300 p-2 rounded-md">
-                <option value="en">英语</option>
-                <option value="zh">中文</option>
-                <option value="ja">日语</option>
-            </select>
-            <button onclick="loadNews()" class="bg-blue-500 text-white p-2 rounded-md hover:opacity-90 hover:translate-y-[-2px]">加载新闻</button>
-        </div>
-        <div id="categoryTabs" class="flex gap-2 mb-4 overflow-x-auto"></div>
-        <div id="loading" class="text-center p-8 text-gray-500 hidden">加载中...</div>
-        <div id="newsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+<body>
+  <header id="home">
+    <h1>Hi, I'm Your Name</h1>
+    <p>Let's do some cool things :)</p>
+    <a href="#about" class="btn">Discover More</a>
+  </header>
+
+  <section id="about">
+    <div class="container">
+      <h2>About Me</h2>
+      <p>Short intro about your background and design philosophy.</p>
+      <img src="assets/profile.jpg" alt="Your Photo">
     </div>
-    <script>
-        const API_TOKEN = 'alOW9iD4Q2b4a2YPTz7jAV5CDwoQytFMAGu18IAd';
-        const API_ENDPOINT = 'https://api.thenewsapi.com/v1/news/headlines';
-        let currentCategory = 'general';
-        let currentData = null;
+  </section>
 
-        async function loadNews() {
-            const locale = document.getElementById('locale').value;
-            const language = document.getElementById('language').value;
-            showLoading(true);
-            try {
-                const url = new URL(API_ENDPOINT);
-                url.searchParams.set('api_token', API_TOKEN);
-                url.searchParams.set('locale', locale);
-                url.searchParams.set('language', language);
-                url.searchParams.set('headlines_per_category', 6);
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP错误: ${response.status}`);
-                const data = await response.json();
-                currentData = data.data;
-                renderCategoryTabs(Object.keys(data.data));
-                renderNews(currentCategory);
-            } catch (error) {
-                alert(`请求失败: ${error.message}`);
-                console.error(error);
-            } finally {
-                showLoading(false);
-            }
-        }
+  <section id="works">
+    <div class="container">
+      <h2>Works</h2>
+      <div class="grid">
+        <!-- Repeat for each project -->
+        <div class="card">
+          <img src="assets/project1.jpg" alt="Project 1">
+          <h3>Project Title</h3>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        function renderCategoryTabs(categories) {
-            const container = document.getElementById('categoryTabs');
-            container.innerHTML = categories.map(cat => `
-                <div class="bg-white p-2 rounded-md cursor-pointer hover:bg-gray-200 ${cat === currentCategory ? 'bg-gray-800 text-white' : ''}" onclick="switchCategory('${cat}')">
-                    ${getCategoryName(cat)}
-                </div>
-            `).join('');
-        }
+  <section id="experiments">
+    <div class="container">
+      <h2>Experiments</h2>
+      <!-- Example: embed snakeball canvas or SVG -->
+      <canvas id="snakeball" width="400" height="400"></canvas>
+    </div>
+  </section>
 
-        function switchCategory(category) {
-            currentCategory = category;
-            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('bg-gray-800', 'text-white'));
-            document.querySelector(`[onclick="switchCategory('${category}')"]`).classList.add('bg-gray-800', 'text-white');
-            renderNews(category);
-        }
+  <section id="contact">
+    <div class="container">
+      <h2>Contact</h2>
+      <a href="mailto:youremail@example.com" class="btn">Say Hello</a>
+    </div>
+  </section>
 
-        function renderNews(category) {
-            const container = document.getElementById('newsContainer');
-            const articles = currentData[category] || [];
-            container.innerHTML = articles.map(article => `
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:translate-y-[-5px] transition-transform">
-                    ${article.image_url ? `<img src="${article.image_url}" alt="${article.title}" class="w-full h-48 object-cover border-b-4 border-blue-500">` : ''}
-                    <div class="p-4">
-                        <h3 class="text-lg font-bold text-gray-800">${article.title}</h3>
-                        <div class="text-sm text-gray-600 mb-2">
-                            <span>${article.source}</span> • 
-                            <span>${new Date(article.published_at).toLocaleDateString()}</span>
-                        </div>
-                        <p>${article.description || article.snippet}</p>
-                    </div>
-                    ${article.similar?.length > 0 ? `
-                    <div class="border-t border-gray-200 p-4 bg-gray-50">
-                        <strong>相关报道:</strong>
-                        <ul>
-                            ${article.similar.slice(0, 2).map(sim => `<li><a href="${sim.url}" target="_blank" class="text-blue-500 hover:underline">${sim.title}</a></li>`).join('')}
-                        </ul>
-                    </div>` : ''}
-                </div>
-            `).join('');
-        }
-
-        function getCategoryName(cat) {
-            const names = {
-                general: '综合',
-                business: '商业',
-                tech: '科技',
-                sports: '体育',
-                science: '科学',
-                health: '健康'
-            };
-            return names[cat] || cat;
-        }
-
-        function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
-        }
-
-        loadNews();
-    </script>
+  <footer>
+    <p>&copy; 2025 Your Name</p>
+  </footer>
 </body>
 </html>
-    
+
+<!-- css/style.css -->
+:root {
+  --bg: #111;
+  --fg: #fff;
+  --accent: #17f700;
+  --transition: 0.3s ease;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: sans-serif; background: var(--bg); color: var(--fg); }
+header, section { padding: 100px 20px; text-align: center; }
+header { height: 100vh; display: flex; flex-direction: column; justify-content: center; background: #000; }
+a.btn { display: inline-block; margin-top: 1rem; padding: 0.75rem 1.5rem; border: 2px solid var(--accent); color: var(--accent); text-decoration: none; transition: var(--transition); }
+a.btn:hover { background: var(--accent); color: #000; }
+.container { max-width: 960px; margin: 0 auto; }
+.grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+.card { width: 280px; overflow: hidden; cursor: pointer; transition: var(--transition); }
+.card img { width: 100%; display: block; }
+.card:hover { transform: scale(1.05); }
+footer { padding: 20px; font-size: 0.875rem; }
+
+<!-- js/script.js -->
+document.addEventListener('DOMContentLoaded', () => {
+  gsap.from('header h1', { y: -50, opacity: 0, duration: 1 });
+  gsap.from('header p', { y: 50, opacity: 0, duration: 1, delay: 0.5 });
+
+  // ScrollTrigger example
+  gsap.utils.toArray('section').forEach(section => {
+    gsap.from(section, {
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 80%',
+      },
+      y: 30,
+      opacity: 0,
+      duration: 0.8
+    });
+  });
+
+  // Simple Snakeball placeholder
+  const canvas = document.getElementById('snakeball');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#17f700';
+  ctx.beginPath();
+  ctx.arc(canvas.width/2, canvas.height/2, 20, 0, Math.PI*2);
+  ctx.fill();
+});
