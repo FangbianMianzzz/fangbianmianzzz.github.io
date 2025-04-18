@@ -95,10 +95,11 @@
             return selectedDishes;
         }
 
-        // 生成菜谱链接
+        // 生成 GitHub 菜谱链接
         function getDishLink(dish, isVegetable) {
+            const githubRepo = 'https://github.com/Anduin2017/HowToCook';
             let category = isVegetable ? "vegetable_dish" : "meat_dish";
-            return `dishes/${category}/${dish}/${dish}.md`;
+            return `${githubRepo}/blob/main/dishes/${category}/${dish}/${dish}.md`;
         }
 
         // 计算并显示结果
@@ -173,3 +174,4 @@
 </body>
 
 </html>
+    
