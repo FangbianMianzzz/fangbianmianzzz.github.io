@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <title>菜品计算</title>
+</head>
+
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-8">
+        <h1 class="text-3xl font-bold text-center mb-8">根据人数计算荤素菜数量</h1>
+        <div class="bg-white p-8 rounded shadow-md">
+            <div class="mb-4">
+                <label for="numPeople" class="block text-gray-700 text-sm font-bold mb-2">人数:</label>
+                <input type="number" id="numPeople" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="请输入人数">
+            </div>
+            <div class="mb-4">
+                <label for="hasKids" class="block text-gray-700 text-sm font-bold mb-2">是否有小孩:</label>
+                <select id="hasKids" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="yes">是</option>
+                    <option value="no">否</option>
+                </select>
+            </div>
+            <button id="calculateBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">计算</button>
+        </div>
+        <div id="result" class="mt-8 bg-white p-8 rounded shadow-md hidden">
+            <h2 class="text-2xl font-bold mb-4">计算结果</h2>
+            <p id="vegetableCount" class="mb-2"></p>
+            <p id="meatCount" class="mb-2"></p>
+            <p id="specialNotes" class="mb-2"></p>
+            <h3 class="text-xl font-bold mb-2">素菜菜谱:</h3>
+            <ul id="vegetableDishes" class="mb-4"></ul>
+            <h3 class="text-xl font-bold mb-2">荤菜菜谱:</h3>
+            <ul id="meatDishes"></ul>
+        </div>
+    </div>
+
+    <script>
+        // 素菜列表
+        const vegetableDishes = [
+            "鸡蛋火腿炒黄瓜", "茄子炖土豆", "茭白炒肉", "椒盐玉米", "金针菇日本豆腐煲",
+            "烤茄子", "榄菜肉末四季豆", "雷椒皮蛋", "凉拌黄瓜", "凉拌木耳",
+            "凉拌莴笋", "凉拌油麦菜", "蒲烧茄子", "芹菜拌茶树菇", "陕北熬豆角",
+            "上汤娃娃菜", "手撕包菜", "水油焖蔬菜", "素炒豆角", "酸辣土豆丝",
+            "糖拌西红柿", "莴笋叶煎饼", "西红柿炒鸡蛋", "西红柿豆腐汤羹", "西葫芦炒鸡蛋",
+            "小炒藕丁", "洋葱炒鸡蛋", "拔丝土豆", "白灼菜心", "包菜炒鸡蛋粉丝",
+            "菠菜炒鸡蛋", "炒滑蛋", "炒茄子", "炒青菜", "葱煎豆腐",
+            "脆皮豆腐", "地三鲜", "干锅花菜", "蚝油三鲜菇", "蚝油生菜",
+            "红烧冬瓜", "红烧茄子", "虎皮青椒", "话梅煮毛豆", "鸡蛋羹",
+            "微波炉鸡蛋羹", "蒸箱鸡蛋羹"
+        ];
+
+        // 荤菜列表
+        const meatDishes = [
+            "白菜猪肉炖粉条", "带把肘子", "冬瓜酿肉", "番茄红酱", "粉蒸肉",
+            "干煸仔鸡", "宫保鸡丁", "咕噜肉", "广式萝卜牛腩", "贵州辣子鸡",
+            "荷兰豆炒腊肠", "黑椒牛柳", "简易红烧肉", "南派红烧肉", "红烧猪蹄",
+            "湖南家常红烧肉", "黄瓜炒肉", "黄焖鸡", "徽派红烧肉", "回锅肉",
+            "尖椒炒牛肉", "尖叫牛蛙", "姜炒鸡", "姜葱捞鸡", "酱牛肉",
+            "酱排骨", "椒盐排条", "咖喱肥牛", "烤鸡翅", "可乐鸡翅",
+            "口水鸡", "辣椒炒肉", "老妈蹄花", "老式锅包肉", "冷吃兔",
+            "荔枝肉", "凉拌鸡丝", "萝卜炖羊排", "麻辣香锅", "麻婆豆腐",
+            "蚂蚁上树", "梅菜扣肉", "奶酪培根通心粉", "牛排", "啤酒鸭",
+            "黔式腊肠娃娃菜", "青椒土豆炒肉", "肉饼炖蛋", "杀猪菜", "山西过油肉",
+            "商芝肉", "瘦肉土豆片", "水煮牛肉", "水煮肉片", "蒜苔炒肉末",
+            "台式卤肉饭", "糖醋里脊", "糖醋排骨", "甜辣烤全翅", "土豆炖排骨",
+            "无骨鸡爪", "西红柿牛腩", "西红柿土豆炖牛肉", "乡村啤酒鸭", "香干芹菜炒肉",
+            "香干肉丝", "香菇滑鸡", "香煎五花肉", "香辣鸡爪煲", "湘祁米夫鸭",
+            "小炒黄牛肉", "小炒鸡肝", "小炒肉", "小米辣炒肉", "小酥肉",
+            "新疆大盘鸡", "血浆鸭", "羊排焖面", "洋葱炒猪肉", "意式烤鸡",
+            "鱼香茄子", "鱼香肉丝", "枝竹羊腩煲", "猪皮冻", "猪肉烩酸菜",
+            "柱候牛腩", "孜然牛肉", "醉排骨"
+        ];
+
+        // 有甜味的菜列表
+        const sweetDishes = [
+            "糖醋里脊", "糖醋排骨", "甜辣烤全翅", "糖拌西红柿", "拔丝土豆"
+        ];
+
+        document.getElementById('calculateBtn').addEventListener('click', function () {
+            const numPeople = parseInt(document.getElementById('numPeople').value);
+            const hasKids = document.getElementById('hasKids').value === 'yes';
+
+            if (isNaN(numPeople) || numPeople <= 0) {
+                alert('请输入有效的人数！');
+                return;
+            }
+
+            const vegetableCount = Math.floor(numPeople / 2);
+            const meatCount = Math.ceil(numPeople / 2);
+
+            let specialNotes = '';
+            if (numPeople > 8) {
+                specialNotes += '考虑在荤菜中增加鱼类荤菜。';
+            }
+            if (hasKids) {
+                specialNotes += '考虑增加有甜味的菜。';
+            }
+            specialNotes += '考虑增加特色菜、拿手菜。决策荤菜时不要全部使用同一种动物的肉，考虑顺序为：猪肉、鸡肉、牛肉、羊肉、鸭肉、鱼肉。不要选择奇奇怪怪的动物做荤菜。';
+
+            document.getElementById('vegetableCount').textContent = `素菜数量: ${vegetableCount}`;
+            document.getElementById('meatCount').textContent = `荤菜数量: ${meatCount}`;
+            document.getElementById('specialNotes').textContent = `特别提示: ${specialNotes}`;
+
+            // 随机选择素菜
+            const selectedVegetableDishes = [];
+            while (selectedVegetableDishes.length < vegetableCount) {
+                const randomIndex = Math.floor(Math.random() * vegetableDishes.length);
+                const dish = vegetableDishes[randomIndex];
+                if (!selectedVegetableDishes.includes(dish)) {
+                    selectedVegetableDishes.push(dish);
+                }
+            }
+
+            // 随机选择荤菜
+            const selectedMeatDishes = [];
+            if (hasKids) {
+                // 如果有小孩，先选一个有甜味的菜
+                const randomSweetIndex = Math.floor(Math.random() * sweetDishes.length);
+                selectedMeatDishes.push(sweetDishes[randomSweetIndex]);
+            }
+            while (selectedMeatDishes.length < meatCount) {
+                const randomIndex = Math.floor(Math.random() * meatDishes.length);
+                const dish = meatDishes[randomIndex];
+                if (!selectedMeatDishes.includes(dish)) {
+                    selectedMeatDishes.push(dish);
+                }
+            }
+
+            // 显示素菜菜谱
+            const vegetableDishesList = document.getElementById('vegetableDishes');
+            vegetableDishesList.innerHTML = '';
+            selectedVegetableDishes.forEach(dish => {
+                const listItem = document.createElement('li');
+                listItem.textContent = dish;
+                vegetableDishesList.appendChild(listItem);
+            });
+
+            // 显示荤菜菜谱
+            const meatDishesList = document.getElementById('meatDishes');
+            meatDishesList.innerHTML = '';
+            selectedMeatDishes.forEach(dish => {
+                const listItem = document.createElement('li');
+                listItem.textContent = dish;
+                meatDishesList.appendChild(listItem);
+            });
+
+            document.getElementById('result').classList.remove('hidden');
+        });
+    </script>
+</body>
+
+</html>
