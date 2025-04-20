@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中午吃什么</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background: #f5f5f7;
+      padding: 1rem;
+      font-family: system-ui, sans-serif;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .result {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1 class="text-center mb-4">中午吃什么</h1>
+  
+  <div class="text-center">
+    <button id="randomBtn" class="btn btn-primary btn-lg">随机选择</button>
+  </div>
+  
+  <div id="result" class="result mt-4" style="display: none;"></div>
+  
+  <div class="mt-5">
+    <h3>午餐选项</h3>
+    <ul class="list-group">
+      <li class="list-group-item">拉面</li>
+      <li class="list-group-item">盖浇饭</li>
+      <li class="list-group-item">饺子</li>
+      <li class="list-group-item">炒饭</li>
+      <li class="list-group-item">汉堡</li>
+      <li class="list-group-item">沙拉</li>
+      <li class="list-group-item">寿司</li>
+      <li class="list-group-item">披萨</li>
+      <li class="list-group-item">麻辣烫</li>
+      <li class="list-group-item">便当</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  const options = [
+    '拉面', '盖浇饭', '饺子', '炒饭', '汉堡', 
+    '沙拉', '寿司', '披萨', '麻辣烫', '便当'
+  ];
+  
+  document.getElementById('randomBtn').addEventListener('click', function() {
+    const randomIndex = Math.floor(Math.random() * options.length);
+    const result = options[randomIndex];
+    
+    const resultElement = document.getElementById('result');
+    resultElement.textContent = `今天中午吃：${result}！`;
+    resultElement.style.display = 'block';
+  });
+</script>
+</body>
+</html>
