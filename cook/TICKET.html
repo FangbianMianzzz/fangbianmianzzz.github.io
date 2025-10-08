@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小票生成系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .control-panel {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .receipt-preview {
+            flex: 1;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1, h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .preset-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .preset-item:hover {
+            background-color: #e9e9e9;
+        }
+        
+        .items-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .item-row:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            flex: 2;
+        }
+        
+        .item-quantity, .item-price, .item-total {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .remove-item {
+            color: #ff5252;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        /* 小票样式 - 使用打印字体 */
+        .receipt {
+            background-color: white;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            /* 使用打印字体 */
+            font-family: 'Courier New', 'Lucida Console', Monaco, monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 10px;
+        }
+        
+        .receipt-items {
+            margin-bottom: 15px;
+        }
+        
+        .receipt-footer {
+            border-top: 1px dashed #000;
+            padding-top: 10px;
+            text-align: center;
+        }
+        
+        .total-amount {
+            font-weight: bold;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .receipt, .receipt * {
+                visibility: visible;
+            }
+            .receipt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                border: none;
+                box-shadow: none;
+                /* 打印时确保使用等宽字体 */
+                font-family: 'Courier New', 'Lucida Console', Monaco, monospace !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="control-panel">
+            <h1>小票生成系统</h1>
+            
+            <div class="mode-selector">
+                <div class="mode-btn active" data-mode="supermarket">超市模式</div>
+                <div class="mode-btn" data-mode="restaurant">饭馆模式</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="store-name">店铺名称</label>
+                <input type="text" id="store-name" placeholder="输入店铺名称" value="南京南合">
+            </div>
+            
+            <div class="form-group">
+                <label for="date">日期</label>
+                <input type="text" id="date" placeholder="输入日期" value="2024/12/01">
+            </div>
+            
+            <h2>预设商品/菜品</h2>
+            <div class="preset-items" id="preset-items">
+                <!-- 预设项目将通过JavaScript动态生成 -->
+            </div>
+            
+            <h2>添加自定义项目</h2>
+            <div class="form-group">
+                <label for="item-name">项目名称</label>
+                <input type="text" id="item-name" placeholder="输入项目名称">
+            </div>
+            
+            <div class="form-row" style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="item-quantity">数量</label>
+                    <input type="number" id="item-quantity" placeholder="数量" value="1" min="1">
+                </div>
+                
+                <div class="form-group" style="flex: 1;">
+                    <label for="item-price">单价 (元)</label>
+                    <input type="number" id="item-price" placeholder="单价" step="0.01" min="0">
+                </div>
+            </div>
+            
+            <button id="add-item">添加到小票</button>
+            
+            <h2>小票项目</h2>
+            <div class="items-list" id="items-list">
+                <!-- 项目列表将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="total-section">
+                <h3>总计: <span id="total-amount">0.00</span> 元</h3>
+            </div>
+            
+            <button id="generate-receipt">生成小票并打印</button>
+        </div>
+        
+        <div class="receipt-preview">
+            <h2>小票预览</h2>
+            <div class="receipt" id="receipt">
+                <div class="receipt-header">
+                    <h3 id="receipt-store-name">南京南合</h3>
+                    <p>日期: <span id="receipt-date">2024/12/01</span></p>
+                </div>
+                
+                <div class="receipt-items" id="receipt-items">
+                    <!-- 小票项目将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="receipt-footer">
+                    <div class="total-amount">总金额: <span id="receipt-total">0.00</span> 元</div>
+                    <p>欢迎再次光临</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 预设数据
+        const presetItems = {
+            supermarket: [
+                { name: "可乐", price: 3.00 },
+                { name: "芬达", price: 3.00 },
+                { name: "薯片", price: 8.50 },
+                { name: "巧克力", price: 12.00 },
+                { name: "牛奶", price: 6.50 },
+                { name: "面包", price: 7.00 },
+                { name: "鸡蛋", price: 12.00 },
+                { name: "大米", price: 45.00 },
+                { name: "纸巾", price: 15.00 },
+                { name: "洗发水", price: 35.00 }
+            ],
+            restaurant: [
+                { name: "宫保鸡丁", price: 38.00 },
+                { name: "鱼香肉丝", price: 32.00 },
+                { name: "麻婆豆腐", price: 28.00 },
+                { name: "水煮鱼", price: 68.00 },
+                { name: "回锅肉", price: 42.00 },
+                { name: "米饭", price: 2.00 },
+                { name: "可乐", price: 5.00 },
+                { name: "啤酒", price: 8.00 },
+                { name: "酸辣汤", price: 25.00 },
+                { name: "炒时蔬", price: 22.00 }
+            ]
+        };
+
+        // 当前模式和项目列表
+        let currentMode = 'supermarket';
+        let items = [];
+
+        // DOM元素
+        const modeBtns = document.querySelectorAll('.mode-btn');
+        const presetItemsContainer = document.getElementById('preset-items');
+        const itemsListContainer = document.getElementById('items-list');
+        const receiptItemsContainer = document.getElementById('receipt-items');
+        const addItemBtn = document.getElementById('add-item');
+        const generateReceiptBtn = document.getElementById('generate-receipt');
+        const totalAmountSpan = document.getElementById('total-amount');
+        const receiptTotalSpan = document.getElementById('receipt-total');
+        const receiptStoreName = document.getElementById('receipt-store-name');
+        const receiptDate = document.getElementById('receipt-date');
+        const storeNameInput = document.getElementById('store-name');
+        const dateInput = document.getElementById('date');
+        const itemNameInput = document.getElementById('item-name');
+        const itemQuantityInput = document.getElementById('item-quantity');
+        const itemPriceInput = document.getElementById('item-price');
+
+        // 初始化
+        function init() {
+            updateMode();
+            updatePresetItems();
+            updateItemsList();
+            updateReceipt();
+            
+            // 事件监听
+            modeBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modeBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentMode = btn.dataset.mode;
+                    updateMode();
+                });
+            });
+            
+            addItemBtn.addEventListener('click', addCustomItem);
+            generateReceiptBtn.addEventListener('click', generateReceipt);
+            
+            storeNameInput.addEventListener('input', updateReceipt);
+            dateInput.addEventListener('input', updateReceipt);
+            
+            // 添加示例项目
+            addItem("古井贡酒年份", 78.50, 1);
+            addItem("芬达橙味", 7.00, 1);
+        }
+
+        // 更新模式
+        function updateMode() {
+            updatePresetItems();
+        }
+
+        // 更新预设项目
+        function updatePresetItems() {
+            presetItemsContainer.innerHTML = '';
+            presetItems[currentMode].forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'preset-item';
+                itemElement.innerHTML = `
+                    <div>${item.name}</div>
+                    <div>¥${item.price.toFixed(2)}</div>
+                `;
+                itemElement.addEventListener('click', () => {
+                    addItem(item.name, item.price);
+                });
+                presetItemsContainer.appendChild(itemElement);
+            });
+        }
+
+        // 添加项目
+        function addItem(name, price, quantity = 1) {
+            items.push({
+                name,
+                price,
+                quantity,
+                total: price * quantity
+            });
+            updateItemsList();
+            updateReceipt();
+        }
+
+        // 添加自定义项目
+        function addCustomItem() {
+            const name = itemNameInput.value.trim();
+            const quantity = parseInt(itemQuantityInput.value) || 1;
+            const price = parseFloat(itemPriceInput.value) || 0;
+            
+            if (!name) {
+                alert('请输入项目名称');
+                return;
+            }
+            
+            if (price <= 0) {
+                alert('请输入有效的价格');
+                return;
+            }
+            
+            addItem(name, price, quantity);
+            
+            // 清空输入框
+            itemNameInput.value = '';
+            itemPriceInput.value = '';
+        }
+
+        // 更新项目列表
+        function updateItemsList() {
+            itemsListContainer.innerHTML = '';
+            
+            if (items.length === 0) {
+                itemsListContainer.innerHTML = '<p>暂无项目</p>';
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const itemRow = document.createElement('div');
+                itemRow.className = 'item-row';
+                itemRow.innerHTML = `
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-quantity">${item.quantity}</div>
+                    <div class="item-price">¥${item.price.toFixed(2)}</div>
+                    <div class="item-total">¥${item.total.toFixed(2)}</div>
+                    <span class="remove-item" data-index="${index}">删除</span>
+                `;
+                itemsListContainer.appendChild(itemRow);
+            });
+            
+            // 添加删除事件
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    items.splice(index, 1);
+                    updateItemsList();
+                    updateReceipt();
+                });
+            });
+            
+            // 更新总金额
+            const total = items.reduce((sum, item) => sum + item.total, 0);
+            totalAmountSpan.textContent = total.toFixed(2);
+        }
+
+        // 更新小票预览
+        function updateReceipt() {
+            receiptStoreName.textContent = storeNameInput.value || '南京南合';
+            receiptDate.textContent = dateInput.value || '2024/12/01';
+            
+            receiptItemsContainer.innerHTML = '';
+            
+            if (items.length === 0) {
+                receiptItemsContainer.innerHTML = '<p>暂无项目</p>';
+                receiptTotalSpan.textContent = '0.00';
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.style.display = 'flex';
+                itemElement.style.justifyContent = 'space-between';
+                itemElement.innerHTML = `
+                    <span>${item.name} × ${item.quantity}</span>
+                    <span>¥${item.total.toFixed(2)}</span>
+                `;
+                receiptItemsContainer.appendChild(itemElement);
+            });
+            
+            // 更新总金额
+            const total = items.reduce((sum, item) => sum + item.total, 0);
+            receiptTotalSpan.textContent = total.toFixed(2);
+        }
+
+        // 生成小票并打印
+        function generateReceipt() {
+            if (items.length === 0) {
+                alert('请先添加项目到小票');
+                return;
+            }
+            
+            window.print();
+        }
+
+        // 初始化应用
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
